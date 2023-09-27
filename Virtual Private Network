@@ -1,0 +1,32 @@
+import java.io.*;
+import java.net.*;
+import javax.crypto.*;
+import java.security.*;
+public class Server 
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            ServerSocket serverSocket = new ServerSocket(12345);
+            System.out.println("Server started. Waiting for connections...");
+
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Client connected.");
+
+            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+            SecretKey secretKey = keyGen.generateKey();
+
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+            out.writeObject(secretKey);
+            out.flush();
+
+            clientSocket.close();
+            serverSocket.close();
+        } 
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
